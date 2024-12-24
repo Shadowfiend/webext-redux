@@ -1,6 +1,6 @@
 import * as redux from "redux";
 
-export type DiffStrategy = (oldObj: any, newObj: any) => any;
+export type DiffStrategy = (oldObj: any, newObj: any, forceUpdate: (newState: any, diff: any[]) => void) => any;
 export type PatchStrategy = (oldObj: any, patch: any) => any;
 
 export class Store<S = any, A extends redux.Action = redux.AnyAction> {

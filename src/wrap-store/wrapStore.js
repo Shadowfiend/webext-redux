@@ -146,9 +146,18 @@ export default ({ channelName = defaultOpts.channelName } = defaultOpts) => {
 
     let currentState = store.getState();
 
+    const forceUpdate = (newState, diff) => {
+      currentState = newState;
+      serializedMessagePoster({
+        type: PATCH_STATE_TYPE,
+        payload: diff,
+        channelName, // Notifying what store is broadcasting the state changes
+      });
+    };
+
     const patchState = () => {
       const newState = store.getState();
-      const diff = diffStrategy(currentState, newState);
+      const diff = diffStrategy(currentState, newState, forceUpdate);
 
       if (diff.length) {
         currentState = newState;
