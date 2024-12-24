@@ -196,7 +196,15 @@ class Store {
             return;
           }
 
-          const {error, value} = resp;
+          const {error} = resp;
+          let {value} = resp;
+
+          if (typeof this.deserializer !== "undefined") {
+            try {
+              value = this.deserializer(value);
+              // If deserialization fails, assume the value isn't serialized.
+            } catch (error) {}
+          }
 
           if (error) {
             const bgErr = new Error(`${backgroundErrPrefix}${error}`);
@@ -211,7 +219,7 @@ class Store {
 
   initializeStore(message) {
     if (message && message.type === FETCH_STATE_TYPE) {
-      this.replaceState(message.payload);
+      this.replaceState(this.deserializer(message.payload));
 
       // Resolve if readyPromise has not been resolved.
       if (!this.readyResolved) {

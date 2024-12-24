@@ -189,7 +189,7 @@ export default ({ channelName = defaultOpts.channelName } = defaultOpts) => {
 
       sendResponse({
         type: FETCH_STATE_TYPE,
-        payload: state,
+        payload: serializer(state),
       });
     });
 
