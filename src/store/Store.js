@@ -145,7 +145,10 @@ class Store {
    * Replaces the state for only the keys in the updated state. Notifies all listeners of state change.
    * @param {object} state the new (partial) redux state
    */
-  patchState(difference) {
+  async patchState(difference) {
+    // Don't attempt a patch if the initial state hasn't been resolved.
+    if (!this.readyResolved) { await this.readyPromise; }
+
     this.state = this.patchStrategy(this.state, difference);
     this.listeners.forEach((l) => l());
   }
